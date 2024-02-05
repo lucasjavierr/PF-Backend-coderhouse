@@ -1,0 +1,51 @@
+<section class="form_container">
+  <div class="wrapper">
+
+    <form id="signupForm" enctype="multipart/form-data">
+      <h1>Sign Up</h1>
+
+      <div class="input-box">
+        <input type="text" name="firstName" placeholder="Nombre" />
+      </div>
+
+      <div class="input-box">
+        <input type="text" name="lastName" placeholder="Apellido" />
+      </div>
+
+      <div class="input-box">
+        <input type="number" name="age" placeholder="Edad" />
+      </div>
+
+      <h3>Sexo</h3>
+      <div class="input-radio-box">
+        <label for="masculino">Masculino
+          <input type="radio" name="gender" value="masculino" id="masculino" />
+        </label>
+        <label for="femenino" class="input-label">Femenino
+          <input type="radio" name="gender" value="femenino" id="femenino" />
+        </label>
+      </div>
+
+      <div class="input-box">
+        <input type="email" name="email" placeholder="Correo electrónico" />
+      </div>
+
+      <div class="input-box">
+        <input type="password" name="password" placeholder="Contraseña" />
+        <i class="bx bx-hide eye-icon"></i>
+      </div>
+
+      <button class="btn">Registrarse</button>
+
+      <p id="errorSignupMsg" class="error-login"></p>
+
+      <div class="register-link">
+        <p>¿Ya tienes una cuenta? <a href="/login">Iniciar sesión</a></p>
+      </div>
+    </form>
+
+    <div class="line"></div>
+  </div>
+</section>
+
+<script src="/js/signup.js"></script>

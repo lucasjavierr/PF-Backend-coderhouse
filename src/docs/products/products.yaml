@@ -1,0 +1,334 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtener todos los productos
+      tags:
+        - Productos
+      parameters:
+        - name: category
+          in: query
+          required: false
+          description: Obtiene sólo los productos de una categoría
+          schema:
+            type: string
+            enum:
+              - processor
+              - graphic-card
+              - ram-memory
+              - storage
+        - name: limit
+          in: query
+          required: false
+          description: Obtiene la cantidad de productos especificados
+          schema:
+            type: number
+        - name: page
+          in: query
+          required: false
+          description: Obtiene los productos según la página indicada
+          schema:
+            type: number
+        - name: sort
+          in: query
+          required: false
+          description: Obtiene los productos ordenados de forma ascendente o descendente según el valor del precio
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        "200":
+          description: Los productos se obtuvieron correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ProductsPagination"
+        "500":
+          description: Hubo un problema en el servidor
+    post:
+      summary: Crear un producto
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/createUpdateProduct"
+      responses:
+        "200":
+          description: El producto se creó correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+
+  /api/products/{productId}:
+    get:
+      summary: Obtener información de un producto
+      tags:
+        - Productos
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se obtuvo el producto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "500":
+          description: Hubo un problema en el servidor
+    put:
+      summary: Actualizar la información de un producto
+      tags:
+        - Productos
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: ID del producto a actualizar
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/createUpdateProduct"
+      responses:
+        "200":
+          description: Se actualizó el producto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+    delete:
+      summary: Eliminar un producto por su ID
+      tags:
+        - Productos
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: ID del producto a eliminar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se eliminó el producto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID generado por la base de datos
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripcion detallada del producto
+        price:
+          type: number
+          description: Precio del producto
+        category:
+          type: string
+          description: Categoría del producto
+        code:
+          type: integer
+          description: Codigo único del producto
+        stock:
+          type: number
+          description: Cantidad del producto disponible
+        thumbnail:
+          type: string
+          description: Imagen del producto
+        status:
+          type: boolean
+          description: Disponibilidad del producto
+        owner:
+          type: ObjectId
+          description: Creador del producto
+      example:
+        _id: 651dd696d8b6464410dc2f49
+        title: AMD Ryzen 9 7950X 3D-V Caché
+        description: Procesador de alto rendimiento AMD Ryzen de Serie 7000 para escritorio
+        price: 800
+        category: processor
+        code: abc123
+        stock: 85
+        thumbnail: https://firebasestorage.googleapis.com/v0/b/component-hardware-6c483.appspot.com/o/products-img%2Fryzen9-7950x3d.png?alt=media&token=e7d525b8-2bdc-43cb-8df0-b5d9201410c1
+        status: true
+        owner: 658db5a5954185979a63514e
+    ProductsPagination:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status de la peticion
+        dataProducts:
+          type: object
+          description: Listado de productos y paginación
+          properties:
+            payload:
+              type: array
+              items:
+                $ref: "#components/schemas/Product"
+            totalPages:
+              type: number
+              description: Total de páginas de los productos
+            prevPage:
+              type: number
+              description: Número de página anterior
+            nextPage:
+              type: number
+              description: Número de página siguiente
+            page:
+              type: number
+              description: Página actual
+            hasPrevPage:
+              type: boolean
+              description: Indica si existe una página anterior
+            hasNextPage:
+              type: boolean
+              description: Indica si existe una página siguiente
+            prevLink:
+              type: string
+              description: Link a la página anterior
+            nextLink:
+              type: string
+              description: Link a la página siguiente
+      example:
+        status: success
+        dataProducts:
+          payload:
+            - _id: 651dd696d8b6464410dc2f49
+              title: AMD Ryzen 9 7950X 3D-V Caché
+              description: Procesador de alto rendimiento AMD Ryzen de Serie 7000 para escritorio
+              price: 800
+              category: processor
+              code: abc123
+              stock: 85
+              thumbnail: https://firebasestorage.googleapis.com/v0/b/component-hardware-6c483.appspot.com/o/products-img%2Fryzen9-7950x3d.png?alt=media&token=e7d525b8-2bdc-43cb-8df0-b5d9201410c1
+              status: true
+              owner: 658db5a5954185979a63514e
+            - _id: 651dd92c0eb2ae46b6fc3c85
+              title: Intel Core i9-13900K
+              description: Procesador de alto rendimiento Intel de 13va generación
+              price: 850
+              category: processor
+              code: abc132
+              stock: 1
+              thumbnail: https://firebasestorage.googleapis.com/v0/b/component-hardware-6c483.appspot.com/o/products-img%2Fi9-13900k.png?alt=media&token=d5223935-6e7b-4cb6-b20a-5ada2e08fb2d
+              status: true
+              __v: 0
+              owner: 658db5a5954185979a63514e
+          totalPages: 4
+          prevPage: null
+          nextPage: 2
+          page: 1
+          hasPrevPage: false
+          hasNextPage: true
+          prevLink: null
+          nextLink: http://localhost:8080/api/products/?limit=2&page=2
+    UpdateSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            _id:
+              type: ObjectId
+              description: ID generado por la base de datos
+            title:
+              type: string
+              description: Nombre del producto
+            description:
+              type: string
+              description: Descripcion detallada del producto
+            price:
+              type: number
+              description: Precio del producto
+            category:
+              type: string
+              description: Categoría del producto
+            code:
+              type: integer
+              description: Codigo único del producto
+            stock:
+              type: number
+              description: Cantidad del producto disponible
+            thumbnail:
+              type: string
+              description: Imagen del producto
+            status:
+              type: boolean
+              description: Disponibilidad del producto
+            owner:
+              type: ObjectId
+              description: Creador del producto
+      example:
+        status: success
+        data:
+          _id: 651dd696d8b6464410dc2f49
+          title: AMD Ryzen 9 7950X 3D-V Caché
+          description: Procesador de alto rendimiento AMD Ryzen de Serie 7000 para escritorio
+          price: 800
+          category: processor
+          code: abc123
+          stock: 85
+          thumbnail: https://firebasestorage.googleapis.com/v0/b/component-hardware-6c483.appspot.com/o/products-img%2Fryzen9-7950x3d.png?alt=media&token=e7d525b8-2bdc-43cb-8df0-b5d9201410c1
+          status: true
+          owner: 658db5a5954185979a63514e
+  requestBodies:
+    createUpdateProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripcion detallada del producto
+        price:
+          type: number
+          description: Precio del producto
+        category:
+          type: string
+          description: Categoría del producto
+        stock:
+          type: number
+          description: Cantidad del producto disponible
+        thumbnail:
+          type: string
+          description: Imagen del producto
+      example:
+        title: AMD Ryzen 9 7950X 3D-V Caché
+        description: Procesador de alto rendimiento AMD Ryzen de Serie 7000 para escritorio
+        price: 800
+        category: processor
+        stock: 85
+        thumbnail: https://firebasestorage.googleapis.com/v0/b/component-hardware-6c483.appspot.com/o/products-img%2Fryzen9-7950x3d.png?alt=media&token=e7d525b8-2bdc-43cb-8df0-b5d9201410c1

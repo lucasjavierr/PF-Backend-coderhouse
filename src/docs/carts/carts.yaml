@@ -1,0 +1,387 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtener todos los carritos
+      tags:
+        - Carritos
+      responses:
+        "200":
+          description: Los carritos se obtuvieron correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/AllCarts"
+        "500":
+          description: Hubo un problema en el servidor
+    post:
+      summary: Crear un carrito
+      tags:
+        - Carritos
+      responses:
+        "200":
+          description: Se creó el carrito correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/CartClean"
+        "500":
+          description: Hubo un problema en el servidor
+
+  /api/carts/{cartId}:
+    get:
+      summary: Obtener la información de un carrito
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Se obtuvo el carrito correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+    put:
+      summary: Actualizar la informacion del carrito
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateCart"
+      responses:
+        "200":
+          description: Se actualizó el carrito correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+    delete:
+      summary: Vaciar un carrito, sin eliminarlo
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El carrito se vació correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/CartClean"
+        "500":
+          description: Hubo un problema en el servidor
+
+  /api/carts/{cartId}/purchase:
+    post:
+      summary: Comprar los productos de un carrito
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El carrito se compró de forma exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/CartPurchased"
+        "500":
+          description: Hubo un problema en el servidor
+
+  /api/carts/{cartId}/product/{productId}:
+    post:
+      summary: Añadir un producto al carrito
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se actualizó el carrito correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "500":
+          description: Hubo un problema en el servidor
+    put:
+      summary: Actualizar la cantidad de un producto en el carrito
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateQuantity"
+      responses:
+        "200":
+          description: Se actualizó la cantidad del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+    delete:
+      summary: Eliminar un producto del carrito
+      tags:
+        - Carritos
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se actualizó la cantidad del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartSuccess"
+        "500":
+          description: Hubo un problema en el servidor
+
+components:
+  schemas:
+    AllCarts:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status de la petición
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: ID del carrito
+              products:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    quantity:
+                      type: number
+                      description: Cantidad del producto
+                    productId:
+                      type: string
+                      description: ID del producto
+      example:
+        status: success
+        data:
+          - _id: 6525b05f6d9f1c50835332d1
+            products:
+              - quantity: 3
+                productId: 651f169a001dfd6564db51e8
+              - quantity: 2
+                productId: 651dd696d8b6464410dc2f49
+          - _id: 658db90628b6336d7704730a
+            products:
+              - quantity: 1
+                productId: 651f169a001dfd6564db51e8
+    CartClean:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: ObjectId
+                description: ID del carrito
+              products:
+                type: array
+                description: Listado de productos con sus cantidades
+                items:
+                  type: object
+                  properties:
+                    quantity:
+                      type: number
+                      descpription: Cantidad del producto en el carrito
+                    productId:
+                      type: ObjectId
+                      descpription: ID del producto, se realiza la populación
+      example:
+        status: success
+        data:
+          _id: 6525b05f6d9f1c50835332d1
+          products: []
+    CartSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: ObjectId
+                description: ID del carrito
+              products:
+                type: array
+                description: Listado de productos con sus cantidades
+                items:
+                  type: object
+                  properties:
+                    quantity:
+                      type: number
+                      descpription: Cantidad del producto en el carrito
+                    productId:
+                      type: ObjectId
+                      descpription: ID del producto, se realiza la populación
+      example:
+        status: success
+        data:
+          - _id: 6525b05f6d9f1c50835332d1
+            products:
+              - quantity: 3
+                productId: 651f169a001dfd6564db51e8
+              - quantity: 2
+                productId: 651dd696d8b6464410dc2f49
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del carrito
+        products:
+          type: array
+          description: Listado de productos
+          items:
+            type: object
+            properties:
+              quantity:
+                type: number
+                descpription: Cantidad del producto en el carrito
+              productId:
+                type: string
+                descpription: ID del producto, al hacer la petición se realiza la populación
+      example:
+        _id: 6525b05f6d9f1c50835332d1
+        quantity: 3
+        products:
+          - _id: 651dd696d8b6464410dc2f49
+            title: AMD Ryzen 9 7950X 3D-V Caché
+            description: Procesador de alto rendimiento AMD Ryzen de Serie 7000 para escritorio
+            price: 800
+            category: processor
+            code: abc123
+            stock: 85
+            thumbnail: https://firebasestorage.googleapis.com/v0/b/component-hardware-6c483.appspot.com/o/products-img%2Fryzen9-7950x3d.png?alt=media&token=e7d525b8-2bdc-43cb-8df0-b5d9201410c1
+            status: true
+            owner: 658db5a5954185979a63514e
+    CartPurchased:
+      type: object
+      properties:
+        status:
+          type: string
+          descpription: Estado de la peticion
+        message:
+          type: string
+          descpription: Mensaje aclarativo sobre la petición
+        cart:
+          type:
+            $ref: "#/components/schemas/CartClean"
+      example:
+        status: success
+        message: Compra realizada de forma exitosa
+        cart:
+          _id: 6525b05f6d9f1c50835332d1
+          products: []
+
+  requestBodies:
+    updateCart:
+      type: array
+      items:
+        type: object
+        properties:
+          quantity:
+            type: number
+            descpription: Cantidad del producto en el carrito
+          productId:
+            type: ObjectId
+            descpription: ID del producto, se realiza la populación
+      example:
+        quantity: 5
+        productId: 651f1511001dfd6564db51e1
+    updateQuantity:
+      type: object
+      properties:
+        newQuantity:
+          type: number
+          description: Nueva cantidad del producto en el carrito
+      example:
+        newQuantity: 4

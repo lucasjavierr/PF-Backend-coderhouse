@@ -1,0 +1,81 @@
+<div class="app-view">
+  <header>
+    <h1 class="title_page">Component <span>Hardware</span></h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/api/docs">Docs</a></li>
+        {{#if user.isAdmin}}
+        <li><a href="/realTime">RealTime</a></li>
+        {{/if}}
+        <li><a href="/products">Products</a></li>
+        <li><a href="/cart/{{user.cart}}" id="cartLink">Cart <span id="cartCounter" class="cartCounter"></span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="welcome">
+    <div class="welcome-message">
+      <h2>{{user.name}}</h2>
+      <p>{{user.email}}</p>
+      <p>{{user.role}}</p>
+    </div>
+    <div class="logout">
+      <a href="/api/sessions/logout">Cerrar sesión</a>
+    </div>
+  </section>
+
+  {{#if user.isAdmin}}
+  <h2>Formulario para crear el productos</h2>
+  <form id="createProductForm">
+    <input type="text" placeholder="Título" name="title" />
+    <input type="text" placeholder="Descripción" name="description" />
+    <input type="text" placeholder="Categoría" name="category" />
+    <input type="text" placeholder="Imagen" name="thumbnail" />
+    <input type="number" placeholder="Precio" name="price" />
+    <input type="number" placeholder="Stock" name="stock" />
+    <button type="submit">Agregar producto</button>
+  </form>
+  {{/if}}
+
+  <h1>Listado de productos</h1>
+  <h2>Categorías</h2>
+  <ul class="categories-list">
+    <li><a href="/products">Todos los productos</a></li>
+    <li><a href="/products?category=processor">Procesadores</a></li>
+    <li><a href="/products?category=graphic-card">Tarjetas Gráficas</a></li>
+    <li><a href="/products?category=ram-memory">Memorias RAM</a></li>
+    <li><a href="/products?category=storage">Almacenamiento</a></li>
+  </ul>
+
+  <section id="productsContainer" class="productsContainer">
+    {{#each dataProducts.payload}}
+    <article class="card_body">
+      <picture class="card_image_container">
+        <img src={{ this.thumbnail }} />
+      </picture>
+      <div class="card_info_container">
+        <h3>{{ this.title }}</h3>
+        <p>${{ this.price }}</p>
+      </div>
+      <div class="card_button_container">
+        <button class="add-to-cart-button" data-product-id="{{ this._id }}">Añadir al carrito</button>
+      </div>
+    </article>
+    {{/each}}
+  </section>
+
+  <div class="controls_paginate">
+    {{#if dataProducts.hasPrevPage}}
+    <a class="controls_prev" href={{dataProducts.prevLink}}>Anterior</a>
+    {{/if}}
+    {{#if dataProducts.hasNextPage}}
+    <a class="controls_next" href={{dataProducts.nextLink}}>Siguiente</a>
+    {{/if}}
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cartCounter.js"></script>
+<script src="/js/products.js"></script>

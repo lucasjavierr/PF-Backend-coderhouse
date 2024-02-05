@@ -1,0 +1,37 @@
+<div class="app-view">
+  <header>
+    <h1 class="title_page">Component <span>Hardware</span></h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/api/docs">Docs</a></li>
+        {{#if user.isAdmin}}
+        <li><a href="/realTime">RealTime</a></li>
+        {{/if}}
+        <li><a href="/products">Products</a></li>
+        <li><a href='/cart/{{user.cart}}' id="cartLink">Cart <span id="cartCounter" class="cartCounter"></span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="welcome">
+    <div class="welcome-message">
+      <h2>{{user.name}}</h2>
+      <p>{{user.email}}</p>
+      <p>{{user.role}}</p>
+    </div>
+    <div class="logout">
+      <a href="/api/sessions/logout">Cerrar sesión</a>
+    </div>
+  </section>
+
+  <h1>Pagina del carrito</h1>
+  <div id="cartClean"></div>
+
+  <section id="cartProductsContainer" class="productsContainer"></section>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cartCounter.js"></script>
+<script src="/js/cart.js"></script>
