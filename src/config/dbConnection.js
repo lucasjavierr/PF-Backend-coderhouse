@@ -6,10 +6,10 @@ export const connectDB = async () => {
   try {
     if ( config.server.env !== 'production' ) {
       await mongoose.connect( config.mongo.urlTest )
-      logger.info( 'Base de datos de testing conectada correctamente' )
+      logger.info( 'Base de datos DEV conectada correctamente' )
     } else {
       await mongoose.connect( config.mongo.url )
-      logger.info( 'Base de datos de testing conectada correctamente' )
+      logger.info( 'Base de datos de PRODUCCIÓN conectada correctamente' )
     }
     console.log( 'http://localhost:8080/login' )
   } catch ( error ) {
