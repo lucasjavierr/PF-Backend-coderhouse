@@ -19,7 +19,8 @@ export const errorHandler = ( error, req, res, next ) => {
       break
 
     default:
-      res.json( { status: 'error', error: 'Error desconocido', cause: error.cause } )
+      console.log( error.message )
+      res.json( { status: 'error', error: 'Unknown error', cause: error.cause } )
       break
   }
 }

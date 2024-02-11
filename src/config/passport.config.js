@@ -31,7 +31,7 @@ export const initializePassport = () => {
           password: await createHash( password ),
           cart: newCart._id,
           role: username.endsWith( '@coder.com' ) ? USER_ROLE_TYPES.ADMIN : USER_ROLE_TYPES.USER,
-          avatar: req.file.filename
+          avatar: req?.file?.filename || ''
         }
 
         const userCreated = await UsersService.createUser( newUser )

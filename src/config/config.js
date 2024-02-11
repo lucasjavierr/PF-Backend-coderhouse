@@ -21,7 +21,8 @@ export const config = {
     env: process.env.NODE_ENV
   },
   mongo: {
-    url: process.env.NODE_ENV === 'development' ? process.env.MONGO_URL_TEST : process.env.MONGO_URL
+    url: process.env.MONGO_URL,
+    urlTest: process.env.MONGO_URL_TEST
   },
   gmail: {
     account: process.env.ADMIN_EMAIL,
