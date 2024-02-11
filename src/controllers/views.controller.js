@@ -4,6 +4,7 @@ import { UsersDto } from '../DTOs/users.dto.js'
 
 export class ViewsController {
   static homeView = ( req, res ) => {
+    if ( !req.user ) return res.redirect( '/login' )
     const userDto = new UsersDto( req.user )
     res.render( 'home', { user: userDto } )
   }
