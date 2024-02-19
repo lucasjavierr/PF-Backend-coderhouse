@@ -28,13 +28,13 @@
 
   {{#if user.isAdmin}}
   <h2>Formulario para crear el productos</h2>
-  <form id="createProductForm">
+  <form id="createProduct">
     <input type="text" placeholder="Título" name="title" />
     <input type="text" placeholder="Descripción" name="description" />
-    <input type="text" placeholder="Categoría" name="category" />
-    <input type="text" placeholder="Imagen" name="thumbnail" />
     <input type="number" placeholder="Precio" name="price" />
+    <input type="text" placeholder="Categoría" name="category" />
     <input type="number" placeholder="Stock" name="stock" />
+    <input type="text" placeholder="Imagen" name="thumbnail" />
     <button type="submit">Agregar producto</button>
   </form>
   {{/if}}
