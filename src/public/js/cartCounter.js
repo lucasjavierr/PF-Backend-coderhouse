@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-return-assign */
 const socketClient = io()
 
 const cartLink = document.getElementById( 'cartLink' )

@@ -1,4 +1,5 @@
 import { productsDao } from '../dao/factory.js'
+import { v4 as uuid } from 'uuid'
 
 export class ProductsService {
   static getAllProducts = async ( query, options ) => {
@@ -10,6 +11,9 @@ export class ProductsService {
   }
 
   static createProduct = async ( productInfo ) => {
+    if ( !productInfo.code ) {
+      productInfo.code = uuid()
+    }
     return productsDao.create( productInfo )
   }
 

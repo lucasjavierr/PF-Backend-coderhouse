@@ -30,7 +30,7 @@
 
   {{#if user.isAdmin}}
   <h2>Formulario para crear el productos</h2>
-  <form id="createProductForm">
+  <form id="createProductForm" data-user-email="{{user.email}}">
     <input type="text" placeholder="Título" name="title" />
     <input type="text" placeholder="Descripción" name="description" />
     <input type="text" placeholder="Categoría" name="category" />

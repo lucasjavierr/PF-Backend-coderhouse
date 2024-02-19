@@ -87,16 +87,18 @@ export class ProductsController {
           errorCode: EError.DATABASE_ERROR
         } )
       }
-      if ( !productInfo.owner ) {
-        productInfo.owner = req.user._id
-      }
-      productInfo.code = uuidv4()
-
       if ( stock < 0 ) {
         return res.json( { status: 'error', message: 'Un producto no puede tener stock negativo' } )
       }
+      const newProduct = {
+        ...productInfo,
+        owner: req.user._id,
+        code: uuidv4(),
+        price: +productInfo.price,
+        stock: +productInfo.stock,
+      }
 
-      const productCreated = await ProductsService.createProduct( productInfo )
+      const productCreated = await ProductsService.createProduct( newProduct )
       res.json( { status: 'success', data: productCreated } )
     } catch ( error ) {
       next( error )
@@ -130,7 +132,7 @@ export class ProductsController {
         return res.json( { status: 'success', data: productDeleted } )
       }
 
-      req.status( 403 ).json( { status: 'error', message: 'No tienes permisos para realizar esta operacion' } )
+      res.status( 403 ).json( { status: 'error', message: 'No tienes permisos para realizar esta operacion' } )
     } catch ( error ) {
       next( error )
     }
