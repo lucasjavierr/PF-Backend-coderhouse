@@ -15,8 +15,10 @@ createProductForm.addEventListener( 'submit', ( e ) => {
   for ( const [ key, value ] of formData.entries() ) {
     jsonData[ key ] = value
   }
-  jsonData.price = parseInt( jsonData.price )
-  jsonData.stock = parseInt( jsonData.stock )
+  jsonData.price = +jsonData.price
+  jsonData.stock = +jsonData.stock
+  const userEmail = createProductForm.getAttribute( 'data-user-email' )
+  jsonData.owner = userEmail
   console.log( jsonData )
 
   // enviamos el objeto a servidor

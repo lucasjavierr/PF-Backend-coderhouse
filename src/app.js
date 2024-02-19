@@ -23,6 +23,7 @@ import { sessionsRouter } from './routes/sessions.routes.js'
 import { usersRouter } from './routes/users.routes.js'
 
 import './config/console.js'
+import { UsersService } from './services/users.service.js'
 
 const port = process.env.PORT || 8080
 const app = express()
@@ -97,6 +98,9 @@ io.on( 'connection', async ( socket ) => {
 
   // recibir los datos del cliente para crear el producto
   socket.on( 'createProduct', async ( productData ) => {
+    const userEmail = productData.owner
+    const user = await UsersService.getUserByEmail( userEmail )
+    productData.owner = user._id
     await ProductsService.createProduct( productData )
     const products = await ProductsService.getAllProducts()
     socket.emit( 'allProducts', products.docs )
