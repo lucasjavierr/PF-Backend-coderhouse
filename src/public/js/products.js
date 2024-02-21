@@ -3,10 +3,23 @@ const addToCartButtons = document.querySelectorAll( '.add-to-cart-button' )
 addToCartButtons.forEach( ( button ) => {
   button.addEventListener( 'click', () => {
     const productId = button.getAttribute( 'data-product-id' )
+    Toastify( {
+      text: "Producto agregado correctamente",
+      duration: 2000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      stopOnFocus: true,
+      style: {
+        background: "linear-gradient(to right, #00b09b, #96c93d)",
+        borderRadius: "15px"
+      },
+    } ).showToast();
     const info = { cartId, productId }
     socketClient.emit( 'addProductToCart', info )
   } )
 } )
+
 
 const createProductForm = document.getElementById( 'createProduct' )
 

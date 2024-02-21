@@ -1,16 +1,14 @@
 <div class="app-view">
-  <header>
+  <header class="header">
     <h1 class="title_page">Component <span>Hardware</span></h1>
     <nav class="navbar">
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><a href="/api/docs">Docs</a></li>
-        {{#if user.isAdmin}}
-        <li><a href="/realTime">RealTime</a></li>
-        {{/if}}
         <li><a href="/products">Products</a></li>
-        <li><a href="/cart/{{user.cart}}" id="cartLink">Cart <span id="cartCounter" class="cartCounter"></span></a></li>
+        <li><a href='/cart/{{user.cart}}' id="cartLink">Cart <span id="cartCounter" class="cartCounter"></span></a>
+        </li>
       </ul>
     </nav>
   </header>
@@ -21,13 +19,16 @@
       <p>{{user.email}}</p>
       <p>{{user.role}}</p>
     </div>
-    <div class="logout">
-      <a href="/api/sessions/logout">Cerrar sesión</a>
+    <div class="buttons-panel">
+      {{#if user.isAdmin}}
+      <a href="/adminPanel" class="admin-panel">Panel de administrador</a>
+      {{/if}}
+      <a href="/api/sessions/logout" class="button-logout">Cerrar sesión</a>
     </div>
   </section>
 
   {{#if user.isAdmin}}
-  <h2>Formulario para crear el productos</h2>
+  <h2>Formulario para crear productos</h2>
   <form id="createProduct">
     <input type="text" placeholder="Título" name="title" />
     <input type="text" placeholder="Descripción" name="description" />
@@ -50,6 +51,7 @@
   </ul>
 
   <section id="productsContainer" class="productsContainer">
+
     {{#each dataProducts.payload}}
     <article class="card_body">
       <picture class="card_image_container">
@@ -64,12 +66,14 @@
       </div>
     </article>
     {{/each}}
+
   </section>
 
   <div class="controls_paginate">
     {{#if dataProducts.hasPrevPage}}
     <a class="controls_prev" href={{dataProducts.prevLink}}>Anterior</a>
     {{/if}}
+
     {{#if dataProducts.hasNextPage}}
     <a class="controls_next" href={{dataProducts.nextLink}}>Siguiente</a>
     {{/if}}

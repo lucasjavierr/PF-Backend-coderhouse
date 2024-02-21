@@ -6,6 +6,7 @@ import { uploadDocuments } from '../utils.js'
 
 const router = Router()
 
+router.get( '/', isAuth, checkRole( [ USER_ROLE_TYPES.ADMIN ] ), UsersController.getAllUsers )
 router.get( '/:userId', isAuth, UsersController.getUser )
 router.put( '/premium/:userId', isAuth, checkRole( [ USER_ROLE_TYPES.ADMIN ] ), UsersController.modifyRole )
 router.post( '/:userId/documents', isAuth, uploadDocuments.fields( [

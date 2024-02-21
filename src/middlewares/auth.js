@@ -23,3 +23,15 @@ export const checkRole = ( roles ) => {
     next()
   }
 }
+
+export const checkRoleView = ( roles ) => {
+  return ( req, res, next ) => {
+    if ( !req.user ) {
+      return res.redirect( '/login' )
+    }
+    if ( !roles.includes( req.user?.role ) ) {
+      return res.redirect( '/unauthorized' )
+    }
+    next()
+  }
+}
