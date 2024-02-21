@@ -1,5 +1,3 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable no-undef */
 socketClient.on( 'cartData', ( dataProducts ) => {
   const cartClean = document.getElementById( 'cartClean' )
   const cartProductsContainer = document.getElementById( 'cartProductsContainer' )
@@ -36,11 +34,27 @@ socketClient.on( 'cartData', ( dataProducts ) => {
     const deleteToCartButtons = document.querySelectorAll( '.delete-to-cart-button' )
     deleteToCartButtons.forEach( ( button ) => {
       button.addEventListener( 'click', () => {
-        const productId = button.getAttribute( 'data-product-id' )
-        const info = { productId, cartId }
-        socketClient.emit( 'deleteProductFromCart', info )
+        Swal.fire( {
+          title: "Estás seguro?",
+          text: "Esta acción no se puede deshacer.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sí"
+        } ).then( ( result ) => {
+          if ( result.isConfirmed ) {
+            Swal.fire( {
+              title: "Eliminado correctamente",
+              text: "El producto se eliminó ",
+              icon: "success"
+            } );
+            const productId = button.getAttribute( 'data-product-id' )
+            const info = { productId, cartId }
+            socketClient.emit( 'deleteProductFromCart', info )
+          }
+        } )
       } )
     } )
   }
 } )
-

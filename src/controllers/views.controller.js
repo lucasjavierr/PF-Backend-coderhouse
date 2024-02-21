@@ -3,10 +3,20 @@ import { ProductsService } from '../services/products.service.js'
 import { UsersDto } from '../DTOs/users.dto.js'
 
 export class ViewsController {
+  static adminPanel = ( req, res ) => {
+    const userDto = new UsersDto( req.user )
+    res.render( 'adminPanel', { user: userDto } )
+  }
+
   static homeView = ( req, res ) => {
     if ( !req.user ) return res.redirect( '/login' )
     const userDto = new UsersDto( req.user )
     res.render( 'home', { user: userDto } )
+  }
+
+  static profileView = ( req, res ) => {
+    const userDto = new UsersDto( req.user )
+    res.render( 'profile', { user: userDto } )
   }
 
   static productsView = async ( req, res ) => {
@@ -58,28 +68,18 @@ export class ViewsController {
     }
   }
 
-  static realTime = ( req, res ) => {
-    const userDto = new UsersDto( req.user )
-    res.render( 'realTime', { user: userDto } )
-  }
-
   static cartView = async ( req, res ) => {
     const userDto = new UsersDto( req.user )
     res.render( 'cart', { user: userDto } )
-  }
-
-  static loginView = ( req, res ) => {
-    if ( req.user ) return res.redirect( '/profile' )
-    res.render( 'login' )
   }
 
   static signupView = ( req, res ) => {
     res.render( 'signup' )
   }
 
-  static profileView = ( req, res ) => {
-    const userDto = new UsersDto( req.user )
-    res.render( 'profile', { user: userDto } )
+  static loginView = ( req, res ) => {
+    if ( req.user ) return res.redirect( '/profile' )
+    res.render( 'login' )
   }
 
   static forgotPassword = ( req, res ) => {
@@ -89,5 +89,17 @@ export class ViewsController {
   static resetPassword = ( req, res ) => {
     const token = req.query.token
     res.render( 'resetPassword', { token } )
+  }
+
+  static notFoundView = ( req, res ) => {
+
+  }
+
+  static unauthorizedView = ( req, res ) => {
+
+  }
+
+  static forbidden = ( req, res ) => {
+
   }
 }

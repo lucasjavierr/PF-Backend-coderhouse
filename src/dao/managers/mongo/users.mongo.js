@@ -5,6 +5,16 @@ export class UsersManagerMongo {
     this.model = usersModel
   }
 
+  async get() {
+    try {
+      const users = await this.model.find().lean()
+      return users
+    } catch ( error ) {
+      console.log( 'DAO USERS get:', error.message )
+      throw new Error( 'Se produjo un error al obtener la información de los usuarios' )
+    }
+  }
+
   async getById( userId ) {
     try {
       const user = await this.model.findById( userId ).lean()

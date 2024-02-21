@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-
+const usersContainer = document.getElementById( 'usersContainer' )
 const productsContainer = document.getElementById( 'productsContainer' )
 const createProductForm = document.getElementById( 'createProductForm' )
 
-// enviamos info del formulario al servidor
+// enviar la informacion del nuevo producto al servidor
 createProductForm.addEventListener( 'submit', ( e ) => {
   e.preventDefault()
   // obtengo los datos ingresados en el formulario
@@ -26,9 +24,8 @@ createProductForm.addEventListener( 'submit', ( e ) => {
   createProductForm.reset()
 } )
 
-// recibimos los productos
+// recibimos los productos y los renderizamos
 socketClient.on( 'allProducts', async ( dataProducts ) => {
-  console.log( 'products', dataProducts )
   let productsElements = ''
   dataProducts.forEach( ( elm ) => {
     productsElements += `
@@ -46,14 +43,52 @@ socketClient.on( 'allProducts', async ( dataProducts ) => {
       </div>
     </article>
     `
-    productsContainer.innerHTML = productsElements
   } )
+  productsContainer.innerHTML = productsElements
 
+  // ponemos un evento a cada uno de los productos para que puedan eliminarse
   const deleteProductButtons = document.querySelectorAll( '.delete-product-button' )
   deleteProductButtons.forEach( ( button ) => {
     button.addEventListener( 'click', () => {
-      const productId = button.getAttribute( 'data-product-id' )
-      socketClient.emit( 'deleteProduct', productId )
+      Swal.fire( {
+        title: "Estás seguro?",
+        text: "Esta acción no se puede deshacer.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí"
+      } ).then( ( result ) => {
+        if ( result.isConfirmed ) {
+          Swal.fire( {
+            title: "Eliminado correctamente",
+            text: "El producto se eliminó ",
+            icon: "success"
+          } );
+          const productId = button.getAttribute( 'data-product-id' )
+          socketClient.emit( 'deleteProduct', productId )
+        }
+      } );
     } )
   } )
+} )
+
+socketClient.on( 'allUsers', async ( users ) => {
+  console.log( users )
+  let usersElements = ''
+  users.forEach( user => {
+    usersElements += `
+      <article class="card_user_body">
+        <picture class="card_user_img_container">
+          <img src="${ user.avatar }" />
+        </picture>
+        <div class="card_user_details">
+          <h3>${ user.name }</h3>
+          <p>${ user.email }</p>
+          <p>${ user.role }</p>
+        </div>
+      </article>
+    `
+  } )
+  usersContainer.innerHTML = usersElements
 } )
