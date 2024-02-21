@@ -15,6 +15,7 @@ import { logger } from './helpers/logger.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { ProductsService } from './services/products.service.js'
 import { CartsService } from './services/carts.service.js'
+import { UsersService } from './services/users.service.js'
 
 import { viewsRouter } from './routes/views.routes.js'
 import { productsRouter } from './routes/products.routes.js'
@@ -23,7 +24,6 @@ import { sessionsRouter } from './routes/sessions.routes.js'
 import { usersRouter } from './routes/users.routes.js'
 
 import './config/console.js'
-import { UsersService } from './services/users.service.js'
 
 const port = process.env.PORT || 8080
 const app = express()
@@ -94,6 +94,9 @@ io.on( 'connection', async ( socket ) => {
 
     const cart = await CartsService.getOneCart( cartId )
     socket.emit( 'cartData', cart.products )
+
+    const users = await UsersService.getAllUsers()
+    socket.emit( 'allUsers', users )
   } )
 
   // recibir los datos del cliente para crear el producto

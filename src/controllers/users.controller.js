@@ -3,8 +3,19 @@ import { EError } from '../enums/EError.js'
 import { UsersService } from '../services/users.service.js'
 import { userIdParamError } from '../services/errors/invalidParamError.service.js'
 import { USER_ROLE_TYPES } from '../enums/constants.js'
+import { UsersDto } from '../DTOs/users.dto.js'
 
 export class UsersController {
+
+  static getAllUsers = async ( req, res, next ) => {
+    try {
+      const users = await UsersService.getAllUsers()
+      res.json( { status: 'success', data: users } )
+    } catch ( error ) {
+      next( error )
+    }
+  }
+
   static getUser = async ( req, res, next ) => {
     try {
       const { userId } = req.params
